@@ -17,7 +17,10 @@ void	Server::loop()
 					break ;
 				}
 				else
+				{
+                    std::cout << "New:: \n";
 					executeCommand(pollfds[i].fd);
+				}
 			}
 		}
 	}

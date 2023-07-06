@@ -11,16 +11,12 @@ void	Server::newClient()
 		return ;
 	}
 	pollfds.push_back((pollfd){this->new_socket, POLLIN, 0});
-	char buff[BUFFER_SIZE];
-	memset(buff, 0, BUFFER_SIZE);
-	int bytes_received = recv(socket_fd, buff, BUFFER_SIZE, 0); 
-	if (bytes_received < 0)
-	{
-		std::cerr << "Receive failed" << std::endl;
-		return ;
-	}
-	buffer = std::string(buff);
-	std::cout << "This:: "<< buffer << std::endl;
+	executeCommand(this->new_socket);
+	// std::cout << "Devam1!\n" ;
+	// executeCommand(this->new_socket);
+	// std::cout << "Devam2!\n" ;
+	// executeCommand(this->new_socket);
+	// std::cout << "Devam3!\n" ;
 	// pollfds.push_back(())
 	std::map<std::string, func_ptr>::iterator it;
 	it = capls_map.begin();
@@ -30,7 +26,7 @@ void	Server::newClient()
 		str += it->first;
 		str += "\n\r";
 		if (send(this->new_socket, str.c_str(), str.size(), 0) != str.size())
-			std::cerr << "Error" << std::endl;
+			std::cerr << "Sending to client Error" << std::endl;
 		++it;
 	}
 }

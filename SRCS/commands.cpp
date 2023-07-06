@@ -1,24 +1,31 @@
 #include "server.hpp"
 
+void Server::pass(int fd, std::string str)
+{
+	std::cout << "[" << str << "]\n";
+}
+
 void Server::cap(int fd, std::string str)
 {
-	(void)str;
+	if (str != "LS\r\n")
+	{
+		std::cerr << "Connection includes an error!!\n";
+		return;
+	}
+	else
+		executeCommand(fd);
 }
 
 void Server::add(int fd, std::string str)
 {
     (void)str;
-	std::cout << "func1: " << std::endl;
-	if (send(fd, "my_new_nick\r\n", 13, 0) != str.size())
-			std::cerr << "Error" << std::endl;
+	std::cout << "Add: " << std::endl;
 }
 
 void Server::nick(int fd, std::string str)
 {
     (void)str;
-	std::cout << "Değişti\n" << std::endl;
-	if (send(fd, "/NICK ALPHA\n\r", 15, 0) != str.size())
-			std::cerr << "Error" << std::endl;
+	std::cout << "Nick\n" << std::endl;
 }
 
 void Server::join(int fd, std::string str)

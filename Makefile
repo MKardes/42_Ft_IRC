@@ -6,7 +6,7 @@ SRCS = $(wildcard SRCS/*.cpp)
 
 all: $(NAME)
 
-$(NAME):
+$(NAME): $(SRCS)
 	@$(CC) $(SRCS) -I$(INC) -o $(NAME)
 	@echo "\033[1;92mCompiled succesfully..\033[0m"
 

@@ -80,6 +80,7 @@ class Server
 
 		void	add(int fd, std::string);
 		void	cap(int fd, std::string);
+		void	pass(int fd, std::string);
 		void	nick(int fd, std::string);
 		void	join(int fd, std::string);
 		void	quit(int fd, std::string);
