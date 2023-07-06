@@ -1,0 +1,24 @@
+#include "server.hpp"
+
+void	Server::loop()
+{
+	while (1)
+	{
+		poll(pollfds.begin().base(), pollfds.size(), -1);
+		for (size_t i = 0 ; i < pollfds.size() ; i++)
+		{
+			if (pollfds[i].revents == POLLIN)
+			{
+				if (pollfds[i].fd == pollfds[0].fd)
+				{
+					// new connection has been occured
+                    std::cout << "New:: \n";
+					newClient();
+					break ;
+				}
+				else
+					executeCommand(pollfds[i].fd);
+			}
+		}
+	}
+}
