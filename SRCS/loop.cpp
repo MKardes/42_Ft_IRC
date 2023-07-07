@@ -12,15 +12,14 @@ void	Server::loop()
 				if (pollfds[i].fd == pollfds[0].fd)
 				{
 					// new connection has been occured
-                    std::cout << "New:: \n";
 					newClient();
-					break ;
 				}
 				else
 				{
-                    std::cout << "New:: \n";
-					executeCommand(pollfds[i].fd);
+					// the existing client will be proceed
+					handleMassage(pollfds[i].fd);
 				}
+				break ;
 			}
 		}
 	}

@@ -1,40 +1,83 @@
 #include "server.hpp"
 
-void Server::pass(int fd, std::string str)
+int Server::pass(int fd, std::string str)
 {
-	std::cout << "[" << str << "]\n";
+    std::vector<std::string>	tokens;
+	int							password;
+
+	tokens = split_by_n_r(str);
+	clients.push_back(Client(tokens[2], tokens[4], tokens[6]));
+	if(tokens[0] != getPassword())
+	{
+		send(fd, "Wrong password!!\n\r", 18, 0);
+		// std::cout << "Wrong password!!\nGetting disconnected...\n";
+		std::vector<pollfd>::iterator pol = pollfds.begin();
+		pol++;
+		std::vector<Client>::iterator cli = clients.begin();
+		while (pol != pollfds.end())
+		{
+			if (pol->fd == fd)
+			{
+				close(fd);
+				pol->fd = -1;
+				pollfds.erase(pol);
+				clients.erase(cli);
+				break ;
+			}
+			pol++;
+			cli++;
+		}
+		tokens.clear();
+		return (-1);
+	}
+	// std::cout << "-[" << tokens[0] << "]\n";
+	// std::cout << "-[" << tokens[1] << "]\n";
+	// std::cout << "-[" << tokens[2] << "]\n";
+	// std::cout << "-[" << tokens[3] << "]\n";
+	// std::cout << "-[" << tokens[4] << "]\n";
+	// std::cout << "-[" << tokens[5] << "]\n";
+	// std::cout << "-[" << tokens[6] << "]\n";
+	// std::cout << "-[" << tokens[7] << "]\n";
+	tokens.clear();
+	return (0);
 }
 
-void Server::cap(int fd, std::string str)
+int Server::cap(int fd, std::string str)
 {
 	if (str != "LS\r\n")
 	{
 		std::cerr << "Connection includes an error!!\n";
-		return;
+		return (-2);
 	}
 	else
-		executeCommand(fd);
+	{
+		handleMassage(fd);
+	}
+	return (0);
 }
 
-void Server::add(int fd, std::string str)
+int Server::add(int fd, std::string str)
 {
     (void)str;
 	std::cout << "Add: " << std::endl;
+	return (0);
 }
 
-void Server::nick(int fd, std::string str)
+int Server::nick(int fd, std::string str)
 {
     (void)str;
 	std::cout << "Nick\n" << std::endl;
+	return (0);
 }
 
-void Server::join(int fd, std::string str)
+int Server::join(int fd, std::string str)
 {
 	(void)str;
 	std::cout << "func3: " << std::endl;
+	return (0);
 }
 
-void Server::quit(int fd, std::string str)
+int Server::quit(int fd, std::string str)
 {
     (void)str;
 	std::vector<pollfd>::iterator	it;
@@ -52,4 +95,5 @@ void Server::quit(int fd, std::string str)
 		}
 		it++;
 	}
+	return (0);
 }

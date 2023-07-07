@@ -8,12 +8,12 @@ Server::Server(int argc, char **argv)
 	socketOperations();
 	socketOperations2(argv);
 
-	capls_map["ADD"]  = &Server::add;
-	capls_map["PASS"]  = &Server::pass;
-	capls_map["NICK"] = &Server::nick;
-	capls_map["JOIN"] = &Server::join;
-	capls_map["QUIT"] = &Server::quit;
-	capls_map["CAP"]  = &Server::cap;
+	commands["ADD"]  = &Server::add;
+	commands["PASS"]  = &Server::pass;
+	commands["NICK"] = &Server::nick;
+	commands["JOIN"] = &Server::join;
+	commands["QUIT"] = &Server::quit;
+	commands["CAP"]  = &Server::cap;
 }
 
 Server::~Server(){}

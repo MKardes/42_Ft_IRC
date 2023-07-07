@@ -2,7 +2,7 @@
 
 void	Server::newClient()
 {
-	// buffer.clear();
+	int	res;
 	int	addr_len = sizeof(address);
 	this->new_socket = accept(socket_fd, (struct sockaddr*)&address, (socklen_t *)&addr_len);
 	if (this->new_socket < 0)
@@ -11,16 +11,19 @@ void	Server::newClient()
 		return ;
 	}
 	pollfds.push_back((pollfd){this->new_socket, POLLIN, 0});
-	executeCommand(this->new_socket);
-	// std::cout << "Devam1!\n" ;
-	// executeCommand(this->new_socket);
-	// std::cout << "Devam2!\n" ;
-	// executeCommand(this->new_socket);
-	// std::cout << "Devam3!\n" ;
-	// pollfds.push_back(())
+
+	res = handleMassage(this->new_socket);
+	if (res == -1)
+	{
+		std::cout << "Wrong password!!\nGetting disconnected...\n";
+		return ;
+	}
+	if (!isFileDescriptorOpen(this->new_socket))
+		return ;
+
 	std::map<std::string, func_ptr>::iterator it;
-	it = capls_map.begin();
-	while (it != capls_map.end())
+	it = commands.begin();
+	while (it != commands.end())
 	{
 		std::string str = "/";
 		str += it->first;

@@ -2,6 +2,7 @@
 # define SERVER_HPP
 
 # include <cstring>
+# include <sstream>
 # include <iostream>
 # include <string>
 # include <vector>
@@ -17,6 +18,9 @@
 # define PORT 8080
 # define BUFFER_SIZE 1024
 # define MAX_USR 100
+
+# define COMMANDS {"ADD", "PASS", "JOIN", "CAP", "QUIT", "EXIT"}
+# define COMMANDCOUNT 6
 
 /* 	A sockaddr_in is a structure containing an internet
 	address. This structure is defined in <netinet/in.h>.
@@ -50,7 +54,7 @@ and you can freely cast the pointer of one type to the other without any harm
 class Server
 {
 	public:
-		typedef void (Server::*func_ptr)(int, std::string);
+		typedef int (Server::*func_ptr)(int, std::string);
 
 	private:
 		int			port;
@@ -61,10 +65,10 @@ class Server
 		int								new_socket;
 		int								socket_fd;
 		struct sockaddr_in				address;
-		std::string						buffer;
+		std::string						msg;
 		std::vector<pollfd>				pollfds; // the first poll is the soket_fd
 		std::vector<Client>				clients;
-		std::map<std::string, func_ptr> capls_map;
+		std::map<std::string, func_ptr> commands;
 
 		Server(int, char **);
 		~Server();
@@ -72,23 +76,28 @@ class Server
 		void	appointment(int argc, char **argv);
 		void	socketOperations();
 		void	socketOperations2(char **argv);
-		void	parser(int fd);
 
+		int		handleMassage(int fd);
+		void	get_msg(int fd);
+		void	parser(int fd, std::string &token, std::string &args);
+		int		executeCommand(int fd, std::string token, std::string args);
 		void	newClient();
-		void	executeCommand(int fd);
 		void	loop();
 
-		void	add(int fd, std::string);
-		void	cap(int fd, std::string);
-		void	pass(int fd, std::string);
-		void	nick(int fd, std::string);
-		void	join(int fd, std::string);
-		void	quit(int fd, std::string);
+		int	add(int fd, std::string);
+		int	cap(int fd, std::string);
+		int	pass(int fd, std::string);
+		int	nick(int fd, std::string);
+		int	join(int fd, std::string);
+		int	quit(int fd, std::string);
 
 		/* Getter and setter */
 		int			getPort();
 		std::string	getPassword();
 };
 
+std::string					delr(std::string str);
+std::vector<std::string>	split_by_n_r(std::string str);
+int							isFileDescriptorOpen(int fd);
 
 #endif
