@@ -17,4 +17,9 @@ fclean: clean
 
 re: fclean all
 
+push: fclean
+	git add *
+	git commit -m "Eerr"
+	git push
+
 .PHONY: all clean fclean re

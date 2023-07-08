@@ -3,6 +3,7 @@
 
 # include <cstring>
 # include <sstream>
+# include <cstdlib>
 # include <iostream>
 # include <string>
 # include <vector>
@@ -15,7 +16,7 @@
 # include <algorithm>
 # include <map>
 # include "client.hpp"
-# define PORT 8080
+
 # define BUFFER_SIZE 1024
 # define MAX_USR 100
 
@@ -75,7 +76,7 @@ class Server
 
 		void	appointment(int argc, char **argv);
 		void	socketOperations();
-		void	socketOperations2(char **argv);
+		void	socketOperations2();
 
 		int		handleMassage(int fd);
 		void	get_msg(int fd);

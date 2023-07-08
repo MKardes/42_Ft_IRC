@@ -6,7 +6,7 @@ Server::Server(int argc, char **argv)
 	std::cout << "Starting IRC server on port " << std::endl;
 	
 	socketOperations();
-	socketOperations2(argv);
+	socketOperations2();
 
 	commands["ADD"]  = &Server::add;
 	commands["PASS"]  = &Server::pass;
@@ -35,7 +35,7 @@ void  Server::appointment(int argc, char **argv)
 		std::cerr << "Arg Error." << std::endl;
 		exit(1);
 	}
-	this->port = std::stoi(argv[1]);
+	this->port = std::atoi(argv[1]);
 	this->password = argv[2];
 }
 
@@ -76,11 +76,11 @@ void	Server::socketOperations()
 	}
 }
 
-void	Server::socketOperations2(char **argv)
+void	Server::socketOperations2()
 {
 	address.sin_family = AF_INET; //IPV4
 	address.sin_addr.s_addr = INADDR_ANY; // INADDR_ANY is a special value used in socket programming to bind a socket to any available local network interface or IP address. 
-	address.sin_port = htons(atoi(argv[1])); // htons(): host port to network port
+	address.sin_port = htons(getPort()); // htons(): host port to network port
 
 	if (bind(socket_fd, (struct sockaddr *)&address, sizeof(address)) < 0)
 	{
