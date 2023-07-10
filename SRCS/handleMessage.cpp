@@ -1,5 +1,20 @@
 #include "server.hpp"
 
+void    Server::get_msg(int fd)
+{
+    int		i = 0, bytes_received;
+	char	buff[BUFFER_SIZE];
+	
+	memset(buff, 0, BUFFER_SIZE);
+	bytes_received = recv(fd, buff, BUFFER_SIZE, 0); 
+	if (bytes_received < 0)
+	{
+		std::cerr << "Receive failed" << std::endl;
+		return  ;
+	}
+	msg = std::string(buff);
+}
+
 std::string toUpper(const std::string& str) {
     std::string result;
     std::string::const_iterator it;
@@ -30,21 +45,6 @@ int	Server::executeCommand(int fd, std::string token, std::string args)
 	if (std::find(my_vec.begin(), my_vec.end(), token) == my_vec.end())
 		return (-3);
 	return ((this->*commands[token])(fd, args));
-}
-
-void    Server::get_msg(int fd)
-{
-    int		i = 0, bytes_received;
-	char	buff[BUFFER_SIZE];
-	
-	memset(buff, 0, BUFFER_SIZE);
-	bytes_received = recv(fd, buff, BUFFER_SIZE, 0); 
-	if (bytes_received < 0)
-	{
-		std::cerr << "Receive failed" << std::endl;
-		return  ;
-	}
-	msg = std::string(buff);
 }
 
 int    Server::handleMassage(int fd)

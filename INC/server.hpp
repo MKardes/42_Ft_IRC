@@ -16,6 +16,8 @@
 # include <algorithm>
 # include <map>
 # include "client.hpp"
+# include "channel.hpp"
+# include "messages.hpp"
 
 # define BUFFER_SIZE 1024
 # define MAX_USR 100
@@ -68,7 +70,8 @@ class Server
 		struct sockaddr_in				address;
 		std::string						msg;
 		std::vector<pollfd>				pollfds; // the first poll is the soket_fd
-		std::vector<Client>				clients;
+		std::map<int, Client>			clients;
+		std::map<std::string, Channel>	channels;
 		std::map<std::string, func_ptr> commands;
 
 		Server(int, char **);
@@ -99,6 +102,7 @@ class Server
 
 std::string					delr(std::string str);
 std::vector<std::string>	split_by_n_r(std::string str);
+int							sendToClient(int fd, std::string msg);
 int							isFileDescriptorOpen(int fd);
 
 #endif

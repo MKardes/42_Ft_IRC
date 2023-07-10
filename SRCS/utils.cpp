@@ -35,3 +35,11 @@ int isFileDescriptorOpen(int fd)
     int flags = fcntl(fd, F_GETFL);
     return (flags != -1);
 }
+
+// Adds the and of the message "\r\n" and then send's it to the fd
+// returns 1 if message send successfully, otherwise 0
+int	sendToClient(int fd, std::string msg)
+{
+	msg += "\r\n";
+	return (send(fd, msg.c_str(), msg.size(), 0) == msg.size() ? 1 : 0);
+}
