@@ -68,19 +68,6 @@ int Server::nick(int fd, std::string str)
 	return (0);
 }
 
-void	printChannel(Channel cha)
-{
-	std::cout << "New channel: " << cha.getName() << "\n";
-    std::cout << "Password: " << cha.getPassword() << "\n";
-    std::cout << "Admin: " << cha.getAdmin().getNick() << "\n\n";
-    std::map<int, Client>::iterator it1 = cha.channel_clients.begin();
-    while (it1 != cha.channel_clients.end())
-    {
-        std::cout << "User: " << it1->second.getNick() << "\n";
-        it1++;
-    }
-}
-
 // returns
 // -3 if the channel has a password but the client did not type it
 // -2 if the password is incorrect,
@@ -143,8 +130,15 @@ int Server::join(int fd, std::string str)
 	}
 	if (res == 0)
 		sendToClient(fd, JOIN(clients[fd].rplFirst(), tokens[0], clients[fd].getNick()));
-	if (it)
-		printChannel(it->second);
+	//std::cout << "New channel: " << it->second.getName() << "\n";
+    //std::cout << "Password: " << it->second.getPassword() << "\n";
+    //std::cout << "Admin: " << it->second.getAdmin().getNick() << "\n\n";
+    //std::map<int, Client>::iterator it1 = it->second.channel_clients.begin();
+    //while (it1 != it->second.channel_clients.end())
+    //{
+    //    std::cout << "User: " << it1->second.getNick() << "\n";
+    //    it1++;
+    //}
 	tokens.clear();
 	return (res);
 }
