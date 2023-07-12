@@ -7,6 +7,12 @@ void	Server::loop()
 		poll(pollfds.begin().base(), pollfds.size(), -1);
 		for (size_t i = 0 ; i < pollfds.size() ; i++)
 		{
+			if (pollfds[i].revents & POLLHUP)
+			{
+				// a client has been disconnected
+				quit(pollfds[i].fd, "");
+				break ;
+			}
 			if (pollfds[i].revents == POLLIN)
 			{
 				if (pollfds[i].fd == pollfds[0].fd)

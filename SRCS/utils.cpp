@@ -1,5 +1,33 @@
 #include "server.hpp"
 
+void	Server::getOutChannels(int fd, Client &cli)
+{
+	// std::cout << "Get Out!!!\n";
+	std::vector<std::string>::iterator it = cli.channelNames.begin();
+    while (it != cli.channelNames.end())
+    {
+        std::map<std::string, Channel>::iterator chIt = channels.find(*it);
+        if(chIt != channels.end())
+        {
+			if (chIt->second.getAdmin()->second.getNick() == cli.getNick())
+			{
+				if (chIt->second.adminDropped() < 0)
+				{
+					std::cout << "channel: " << chIt->first << " is removed!\n";
+					chIt->second.channel_clients.clear();
+					channels.erase(chIt);
+				}
+			}
+			if (chIt->second.channel_clients.find(fd) != 0)
+				chIt->second.channel_clients.erase(chIt->second.channel_clients.find(fd));
+            cli.channelNames.erase(it);
+            it = cli.channelNames.begin(); // Reset the iterator after erasing an element
+        }
+		else
+        	it++;
+    }
+}
+
 std::string delr(std::string str)
 {
 	std::string::iterator	it = str.begin();

@@ -9,6 +9,7 @@ Server::Server(int argc, char **argv)
 	socketOperations2();
 
 	commands["ADD"]  = &Server::add;
+	commands["USER"]  = &Server::user;
 	commands["PASS"]  = &Server::pass;
 	commands["NICK"] = &Server::nick;
 	commands["JOIN"] = &Server::join;

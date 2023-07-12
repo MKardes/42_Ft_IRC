@@ -2,11 +2,12 @@ NAME = ircserv
 CC = c++ -std=c++98 
 #CFLAGS = -Wall -Wextra -Werror
 INC = INC
+INCS = $(INC)/*.hpp
 SRCS = $(wildcard SRCS/*.cpp)
 
 all: $(NAME)
 
-$(NAME): $(SRCS)
+$(NAME): $(SRCS) $(INCS)
 	@$(CC) $(SRCS) -I$(INC) -o $(NAME)
 	@echo "\033[1;92mCompiled succesfully..\033[0m"
 

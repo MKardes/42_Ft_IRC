@@ -2,15 +2,17 @@
 
 Client::Client(): _nick("Empty!"), _username("Empty!"), _hostname("Empty!")
 {
-    std::cout << "Default constructer has been called!\n";
+    // std::cout << "Default constructer has been called!\n";
 }
 
-Client::Client(std::string nick, std::string username, std::string hostname): _nick(nick), _username(username), _hostname(hostname)
+Client::Client(std::string nick): _nick(nick)
 {
-    std::cout << "Constructer!!!\n";
+    // std::cout << "Constructer!!!\n";
 }
 
-Client::~Client(){}
+Client::~Client()
+{
+}
 
 std::string Client::getNick()
 {

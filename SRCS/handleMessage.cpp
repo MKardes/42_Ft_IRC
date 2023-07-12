@@ -1,21 +1,33 @@
 #include "server.hpp"
 
-void    Server::get_msg(int fd)
+std::string	Server::get_msg(int fd)
 {
-    int		i = 0, bytes_received;
-	char	buff[BUFFER_SIZE];
+    int			i = 0, bytes_received;
+	char		buff[BUFFER_SIZE];
+	std::string	res;
 	
-	memset(buff, 0, BUFFER_SIZE);
-	bytes_received = recv(fd, buff, BUFFER_SIZE, 0); 
-	if (bytes_received < 0)
+	while (msg.find("\r\n") == std::string::npos)
 	{
-		std::cerr << "Receive failed" << std::endl;
-		return  ;
+		memset(buff, 0, BUFFER_SIZE);
+		bytes_received = recv(fd, buff, BUFFER_SIZE, 0);
+		if (bytes_received < 0)
+		{
+			std::cerr << "Receive failed" << std::endl;
+			return "";
+		}
+		msg += buff;
+
 	}
-	msg = std::string(buff);
+	res = msg.substr(0, msg.find("\r\n"));
+	msg = msg.substr(msg.find("\r\n") + 2, msg.size() - (msg.find("\r\n") + 2));
+
+	// std::cout << "res: [" << res << "]"<< std::endl;
+    // std::cout << msg.empty() << "msg: [" << msg << "]"<< std::endl;
+	return res;
 }
 
-std::string toUpper(const std::string& str) {
+std::string toUpper(const std::string& str)
+{
     std::string result;
     std::string::const_iterator it;
     for (it = str.begin(); it != str.end(); ++it) {
@@ -24,15 +36,22 @@ std::string toUpper(const std::string& str) {
     return result;
 }
 
-void	Server::parser(int fd, std::string &token, std::string &args)
+void	Server::parser(std::string str, std::string &token, std::string &args)
 {
 	int	res;
-    std::string str = msg;
 	int	del_place = str.find(" ");
-	token = str.substr(0, del_place);
-	args = str.substr(del_place + 1);
-
-	token = toUpper(token);
+	if (del_place != std::string::npos)
+	{
+		token = str.substr(0, del_place);
+		args = str.substr(del_place + 1);
+		token = toUpper(token);
+	}
+	else
+	{
+        // Handle the case when space is not found
+		token = toUpper(str);
+        args = "";
+    }
 }
 
 // -1 for wrong password
@@ -49,8 +68,16 @@ int	Server::executeCommand(int fd, std::string token, std::string args)
 
 int    Server::handleMassage(int fd)
 {
-    std::string token, args;
-    get_msg(fd);
-    parser(fd, token, args);
-    return (executeCommand(fd, token, args));
+    std::string token, args, str;
+	str = get_msg(fd);
+	while (!str.empty())
+	{
+    	parser(str, token, args);
+		std::cout << "Token: (" << token << ") Args: (" << args << ")\n"; 
+		executeCommand(fd, token, args);
+		if(msg.empty())
+			return 1;
+		str = get_msg(fd);
+	}
+    return (1);
 }

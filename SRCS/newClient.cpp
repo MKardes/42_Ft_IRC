@@ -12,23 +12,23 @@ void	Server::newClient()
 	}
 	pollfds.push_back((pollfd){new_socket, POLLIN, 0});
 
-	res = handleMassage(new_socket);
-	if (res == -1)
-	{
-		std::cout << "Wrong password!!\nGetting disconnected...\n";
-		return ;
-	}
-	if (!isFileDescriptorOpen(new_socket))
-		return ;
+	// res = handleMassage(new_socket);
+	// if (res == -1)
+	// {
+	// 	std::cout << "Wrong password!!\nGetting disconnected...\n";
+	// 	return ;
+	// }
+	// if (!isFileDescriptorOpen(new_socket))
+	// 	return ;
 
-	std::map<std::string, func_ptr>::iterator it;
-	it = commands.begin();
-	while (it != commands.end())
-	{
-		if (!sendToClient(new_socket, "/" + it->first))
-			std::cerr << "Sending to client Error" << std::endl;
-		++it;
-	}
+	// std::map<std::string, func_ptr>::iterator it;
+	// it = commands.begin();
+	// while (it != commands.end())
+	// {
+	// 	if (!sendToClient(new_socket, "/" + it->first))
+	// 		std::cerr << "Sending to client Error" << std::endl;
+	// 	++it;
+	// }
 }
 //void	Server::newClient()
 //{
@@ -55,6 +55,8 @@ void	Server::newClient()
 //		pass(new_socket, getPassword() + " s Eyüp s mkardes s *");
 //	std::map<std::string, func_ptr>::iterator it;
 //	it = commands.begin();
+//	if (!sendToClient(new_socket, "Welcome to the IRC Server dear " + clients[new_socket].getNick()))
+//			std::cerr << "Sending to client Error" << std::endl;
 //	while (it != commands.end())
 //	{
 //		if (!sendToClient(new_socket, "/" + it->first))

@@ -1,17 +1,9 @@
 #include "channel.hpp"
 
-Channel::Channel(std::string _name, int _pass, int fd, Client _admin): admin(_admin), password(_pass), name(_name)
+Channel::Channel(std::string _name, int _pass, int fd, Client &_admin): admin(_admin), password(_pass), name(_name), maxUserCount(MAXUSER)
 {
+    setAdmin(admin);
     addClient(fd, admin);
-    std::cout << "New channel: " << getName() << "\n";
-    std::cout << "Password: " << getPassword() << "\n";
-    std::cout << "Admin: " << getAdmin().getNick() << "\n\n";
-    std::map<int, Client>::iterator it = channel_clients.begin();
-    while (it != channel_clients.end())
-    {
-        std::cout << "User: " << it->second.getNick() << "\n";
-        it++;
-    }
 }
 
 void Channel::setPassword(int pass)
@@ -29,14 +21,19 @@ void Channel::setName(std::string _name)
     name = _name;
 }
 
+int Channel::getMax()
+{
+    return (maxUserCount);
+}
+
 int Channel::getPassword()
 {
     return (password);
 }
 
-Client Channel::getAdmin()
+std::map<int, Client>::iterator Channel::getAdmin()
 {
-    return (admin);    
+    return (channel_clients.begin());    
 }
 
 std::string Channel::getName()
@@ -45,14 +42,36 @@ std::string Channel::getName()
 }
 
 // returns -1 if the client has already joined to that channel
-int Channel::addClient(int fd, Client cli)
+int Channel::addClient(int fd, Client &cli)
 {
-    std::map<int, Client>::iterator it = channel_clients.find(fd);
-    if (it != channel_clients.end())
+    for(std::map<int, Client>::iterator it = channel_clients.begin(); it != channel_clients.end(); it++)
     {
-        sendToClient(fd, "You have already joined to that channel!");
-        return (-1);
+        if (it->second.getNick() == cli.getNick())
+        {
+            return (-1);
+        }
     }
     channel_clients.insert(std::pair<int, Client>(fd, cli));
     return (0);
+}
+
+void    Channel::delClient(int fd)
+{
+    channel_clients.erase(fd);
+}
+
+// returns -1 if there is no user left to be admin
+// otherwise 0
+int Channel::adminDropped()
+{
+    std::map<int, Client>::iterator it = channel_clients.begin();
+    it++;
+    if (it == channel_clients.end())
+        return (-1);
+    else
+        setAdmin(it->second);
+    channel_clients.erase(channel_clients.begin());
+
+    std::cout << "New Admin is " << getAdmin()->second.getNick() << std::endl;
+    return 0;
 }
