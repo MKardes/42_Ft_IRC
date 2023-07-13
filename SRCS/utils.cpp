@@ -4,6 +4,12 @@ void	Server::getOutChannels(int fd, Client &cli)
 {
 	// std::cout << "Get Out!!!\n";
 	std::vector<std::string>::iterator it = cli.channelNames.begin();
+	int		i = 0;
+	for(std::vector<std::string>::iterator beg = cli.channelNames.begin(); beg != cli.channelNames.end(); beg++)
+	{
+		std::cout << i << " -- " << *beg << "\n";
+		i++;
+	}
     while (it != cli.channelNames.end())
     {
         std::map<std::string, Channel>::iterator chIt = channels.find(*it);
@@ -18,14 +24,19 @@ void	Server::getOutChannels(int fd, Client &cli)
 					channels.erase(chIt);
 				}
 			}
-			if (chIt->second.channel_clients.find(fd) != 0)
-				chIt->second.channel_clients.erase(chIt->second.channel_clients.find(fd));
-            cli.channelNames.erase(it);
-            it = cli.channelNames.begin(); // Reset the iterator after erasing an element
+			if (chIt->second.channel_clients.find(fd) != chIt->second.channel_clients.end())
+				chIt->second.channel_clients.erase(fd);
+			else
+				std::cout << "Else\n";
         }
-		else
-        	it++;
+		std::cout << *it << "E\n";
+		if (it == cli.channelNames.end())
+			std::cout << "YES\n";
+        it++;
+		std::cout << "C\n";
     }
+	std::cout << "geldim\n";
+	cli.channelNames.clear();
 }
 
 std::string delr(std::string str)
@@ -70,4 +81,29 @@ int	sendToClient(int fd, std::string msg)
 {
 	msg += "\r\n";
 	return (send(fd, msg.c_str(), msg.size(), 0) == msg.size() ? 1 : 0);
+}
+
+void	printChannel(Channel &cha)
+{
+	std::cout << "New channel: " << cha.getName() << "\n";
+    std::cout << "Password: " << cha.getPassword() << "\n";
+    std::cout << "Admin: " << cha.getAdmin()->second.getNick() << "\n\n";
+    std::map<int, Client>::iterator it = cha.channel_clients.begin();
+    while (it != cha.channel_clients.end())
+    {
+        std::cout << "User: " << it->second.getNick() << "\n";
+        it++;
+    }
+}
+
+void	Server::print()
+{
+	int	i = 1;
+	for(std::map<std::string, Channel>::iterator it = channels.begin(); it != channels.end(); it++)
+	{
+		std::cout << "\n" << i << ". ";
+		printChannel(it->second);
+		std::cout << "\n";
+		i++;
+	}
 }

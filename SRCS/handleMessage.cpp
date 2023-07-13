@@ -54,15 +54,13 @@ void	Server::parser(std::string str, std::string &token, std::string &args)
     }
 }
 
-// -1 for wrong password
-// -2 for wrong type of input CAP LS
-// -3 if couldn't be found the command
+// -11 if couldn't be found the command
 int	Server::executeCommand(int fd, std::string token, std::string args)
 {
 	std::string my_array[] = COMMANDS;
 	std::vector<std::string> my_vec(my_array, my_array + COMMANDCOUNT);
 	if (std::find(my_vec.begin(), my_vec.end(), token) == my_vec.end())
-		return (-3);
+		return (-11);
 	return ((this->*commands[token])(fd, args));
 }
 

@@ -11,6 +11,7 @@ void	Server::loop()
 			{
 				// a client has been disconnected
 				quit(pollfds[i].fd, "");
+				print();
 				break ;
 			}
 			if (pollfds[i].revents == POLLIN)
@@ -25,6 +26,7 @@ void	Server::loop()
 					// the existing client will be proceed
 					handleMassage(pollfds[i].fd);
 				}
+				print();
 				break ;
 			}
 		}

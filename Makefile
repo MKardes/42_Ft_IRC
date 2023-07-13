@@ -3,7 +3,7 @@ CC = c++ -std=c++98
 #CFLAGS = -Wall -Wextra -Werror
 INC = INC
 INCS = $(INC)/*.hpp
-SRCS = $(wildcard SRCS/*.cpp)
+SRCS = $(wildcard SRCS/*.cpp) $(wildcard SRCS/Commands/*.cpp)
 
 all: $(NAME)
 

@@ -22,8 +22,8 @@
 # define BUFFER_SIZE 1024
 # define MAX_USR 100
 
-# define COMMANDS {"ADD", "PASS", "JOIN", "CAP", "QUIT", "EXIT", "USER", "NICK"}
-# define COMMANDCOUNT 8
+# define COMMANDS {"PASS", "JOIN", "QUIT", "USER", "NICK", "KICK", "PRIVMSG", "PING", "PONG"}
+# define COMMANDCOUNT 9
 
 /* 	A sockaddr_in is a structure containing an internet
 	address. This structure is defined in <netinet/in.h>.
@@ -90,22 +90,28 @@ class Server
 
 		void getOutChannels(int fd, Client &cli);
 
-		int	add(int fd, std::string);
 		int	user(int fd, std::string);
-		int	cap(int fd, std::string);
 		int	pass(int fd, std::string);
 		int	nick(int fd, std::string);
 		int	join(int fd, std::string);
 		int	quit(int fd, std::string);
+		int	privmsg(int fd, std::string);
+		int	ping(int fd, std::string);
+		int	pong(int fd, std::string);
+		int	kick(int fd, std::string);
 
 		/* Getter and setter */
 		int			getPort();
 		std::string	getPassword();
+
+		void	print();
 };
 
 std::string					delr(std::string str);
 std::vector<std::string>	split_by_n_r(std::string str);
 int							sendToClient(int fd, std::string msg);
 int							isFileDescriptorOpen(int fd);
+
+void	printChannel(Channel &cha);
 
 #endif

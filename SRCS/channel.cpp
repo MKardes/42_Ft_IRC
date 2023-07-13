@@ -51,7 +51,7 @@ int Channel::addClient(int fd, Client &cli)
             return (-1);
         }
     }
-    channel_clients.insert(std::pair<int, Client>(fd, cli));
+    channel_clients[fd] = cli;
     return (0);
 }
 

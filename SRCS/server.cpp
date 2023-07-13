@@ -8,13 +8,15 @@ Server::Server(int argc, char **argv)
 	socketOperations();
 	socketOperations2();
 
-	commands["ADD"]  = &Server::add;
 	commands["USER"]  = &Server::user;
 	commands["PASS"]  = &Server::pass;
 	commands["NICK"] = &Server::nick;
 	commands["JOIN"] = &Server::join;
 	commands["QUIT"] = &Server::quit;
-	commands["CAP"]  = &Server::cap;
+	commands["KICK"]  = &Server::kick;
+	commands["PING"]  = &Server::ping;
+	commands["PONG"]  = &Server::pong;
+	commands["PRIVMSG"]  = &Server::privmsg;
 }
 
 Server::~Server(){}
