@@ -11,6 +11,9 @@ int Server::quit(int fd, std::string str)
 		if (it->fd == fd)
 		{
 			getOutChannels(fd, clients[fd]);
+			sendToClient(fd, str);
+			passchc = 0;
+			firstPassCall[fd] = 0;
 			clients.erase(fd);
 			close(it->fd);
 			it->fd = -1;

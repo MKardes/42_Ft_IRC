@@ -2,13 +2,12 @@
 
 int Server::pass(int fd, std::string str)
 {
-	static int a;
-	if(str != getPassword() && a == 0)
+	if(str != getPassword() && firstPassCall[fd] == 0)
 	{
-		sendToClient(fd, "Wrong password!!");
-		quit(fd, "Wrong Password");
+		quit(fd, "Wrong Password!!");
 		return (-1);
 	}
-	a++;
+	passchc = 1;
+	firstPassCall[fd] = 1;
 	return (0);
 }

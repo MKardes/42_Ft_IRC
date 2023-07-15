@@ -8,6 +8,9 @@ Server::Server(int argc, char **argv)
 	socketOperations();
 	socketOperations2();
 
+	for(int i = 0; i < MAX_USER; i++)
+		firstPassCall[i] = 0;
+
 	commands["USER"]  = &Server::user;
 	commands["PASS"]  = &Server::pass;
 	commands["NICK"] = &Server::nick;
@@ -91,7 +94,7 @@ void	Server::socketOperations2()
 		exit(1);
 	}
 
-	if (listen(socket_fd, MAX_USR) < 0)
+	if (listen(socket_fd, MAX_USER) < 0)
 	{
 		std::cerr << "Listen error!!" << std::endl;
 		exit(1);

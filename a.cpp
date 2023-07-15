@@ -55,5 +55,5 @@ int main()
     obj.vect1.erase(it + 1);
     obj.vect1.erase(it);
     for(std::vector<A>::iterator beg = obj.vect2.begin(); beg != obj.vect2.end(); beg++)
-        std::cout << "-> " << beg->val<< std::endl; 
+        std::cout << "-> " << beg->val<< std::endl;
 }

@@ -12,6 +12,7 @@ class   Client
 	    std::string	_hostname;
         
     public:
+        bool                        pass;
         std::vector<std::string>    channelNames;
 
         Client();

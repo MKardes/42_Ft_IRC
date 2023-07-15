@@ -1,11 +1,11 @@
 #include "client.hpp"
 
-Client::Client(): _nick("Empty!"), _username("Empty!"), _hostname("Empty!")
+Client::Client(): _nick("Empty!"), _username("Empty!"), _hostname("Empty!"), pass(0)
 {
     // std::cout << "Default constructer has been called!\n";
 }
 
-Client::Client(std::string nick): _nick(nick)
+Client::Client(std::string nick): _nick(nick), pass()
 {
     // std::cout << "Constructer!!!\n";
 }

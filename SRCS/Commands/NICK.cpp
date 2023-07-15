@@ -3,15 +3,19 @@
 // returns -1 if the nick is in use
 int Server::nick(int fd, std::string str)
 {
+	if (passchc == 0)
+		quit(fd, "You need a password!");
+	passchc = 0;
 	std::map<int, Client>::iterator it = clients.find(fd);
 	std::map<int, Client>::iterator cli = clients.begin();
 	while (cli != clients.end())
 	{
 		if (cli->second.getNick() == str)
 		{
+			// the new nick is found in other clients
 			sendToClient(fd, "The Nick is in Use!");
-			if (it == clients.end())
-				quit(fd, "The Nick is in Use!");
+			if (it == clients.end()) // if the client is a new client we should close it
+				quit(fd, "");
 			return (-1);
 		}
 		cli++;

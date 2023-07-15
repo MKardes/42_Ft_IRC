@@ -19,8 +19,10 @@
 # include "channel.hpp"
 # include "messages.hpp"
 
+#include <arpa/inet.h>
+
 # define BUFFER_SIZE 1024
-# define MAX_USR 100
+# define MAX_USER 100
 
 # define COMMANDS {"PASS", "JOIN", "QUIT", "USER", "NICK", "KICK", "PRIVMSG", "PING", "PONG"}
 # define COMMANDCOUNT 9
@@ -67,6 +69,8 @@ class Server
 	public:
 		int								new_socket;
 		int								socket_fd;
+		bool							firstPassCall[MAX_USER];
+		bool							passchc;
 		struct sockaddr_in				address;
 		std::string						msg;
 		std::vector<pollfd>				pollfds; // the first poll is the soket_fd
