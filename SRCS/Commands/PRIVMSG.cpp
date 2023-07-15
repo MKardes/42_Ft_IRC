@@ -1,6 +1,8 @@
 #include "server.hpp"
 
-// returns -1 if message found
+// returns
+// -2 if channel couldn't be found
+// -1 if message found
 int Server::privmsg(int fd, std::string str)
 {
     int	        res;
@@ -13,11 +15,25 @@ int Server::privmsg(int fd, std::string str)
 	}
     else
         return (-1);
-    std::map<int, Client>::iterator it = clients.begin();
-    for (; it != clients.end(); it++)
+    if (channel[0] != '#')
     {
-        if (it->first != fd)
-            sendToClient(it->first, PRIV(clients[it->first].rplFirst(), channel, msg));
+        std::map<int, Client>::iterator it = clients.begin();
+        for (; it != clients.end(); it++)
+            if (it->second.getNick() == channel)
+                sendToClient(it->first, PRIV(clients[fd].rplFirst(), clients[fd].getNick(), msg));
+    }
+    else
+    {
+        std::map<std::string, Channel>::iterator cha = channels.find(channel);
+        if (cha == channels.end())
+            return (-2);
+        std::map<int, Client>::iterator cli = cha->second.channel_clients.begin();
+        for (; cli != cha->second.channel_clients.end(); cli++)
+        {
+            if (cli->first != fd)
+                sendToClient(cli->first, PRIV(clients[fd].rplFirst(), channel, msg));
+        }
+        
     }
     return (0);
 }

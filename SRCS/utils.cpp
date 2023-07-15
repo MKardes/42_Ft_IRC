@@ -35,7 +35,6 @@ void	Server::getOutChannels(int fd, Client &cli)
         it++;
 		std::cout << "C\n";
     }
-	std::cout << "geldim\n";
 	cli.channelNames.clear();
 }
 

@@ -9,10 +9,10 @@ int Server::user(int fd, std::string str)
 
 	std::map<std::string, func_ptr>::iterator it;
 	it = commands.begin();
+	sendToClient(new_socket, "Welcome to IRC Server dear " + clients[fd].getNick());
 	while (it != commands.end())
 	{
-		if (!sendToClient(new_socket, "/" + it->first))
-			std::cerr << "Sending to client Error" << std::endl;
+		sendToClient(new_socket, "/" + it->first);
 		++it;
 	}
 	return 1;

@@ -16,6 +16,7 @@ int Server::quit(int fd, std::string str)
 			it->fd = -1;
 			pollfds.erase(it);
 			std::cout << "\033[1;91mA client has disconnected!\033[0m" << std::endl;
+			msg.clear();
 			break ;
 		}
 		it++;
