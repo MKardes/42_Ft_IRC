@@ -8,12 +8,13 @@ int Server::user(int fd, std::string str)
 	clients[fd].setHostname(tokens[2]);
 
 	std::map<std::string, func_ptr>::iterator it;
-	it = commands.begin();
 	sendToClient(new_socket, "Welcome to IRC Server dear " + clients[fd].getNick());
+	it = commands.begin();
 	while (it != commands.end())
 	{
-		sendToClient(new_socket, "/" + it->first);
+		if (!IGNORE)
+			sendToClient(new_socket, "/" + it->first);
 		++it;
 	}
-	return 1;
+	return 0;
 }

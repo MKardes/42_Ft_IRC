@@ -3,10 +3,10 @@
 // returns -1 if the nick is in use
 int Server::nick(int fd, std::string str)
 {
-	if (passchc == 0)
+	std::map<int, Client>::iterator it = clients.find(fd);
+	if (it == clients.end() && passchc == 0) // checks if the pass command is executed
 		quit(fd, "You need a password!");
 	passchc = 0;
-	std::map<int, Client>::iterator it = clients.find(fd);
 	std::map<int, Client>::iterator cli = clients.begin();
 	while (cli != clients.end())
 	{

@@ -67,12 +67,18 @@ int	Server::executeCommand(int fd, std::string token, std::string args)
 int    Server::handleMassage(int fd)
 {
     std::string token, args, str;
+	int			res = 0;
+
 	str = get_msg(fd);
 	while (!str.empty())
 	{
     	parser(str, token, args);
 		std::cout << "Token: (" << token << ") Args: (" << args << ")\n"; 
-		executeCommand(fd, token, args);
+		res = executeCommand(fd, token, args);
+		if (res == -11)
+			sendToClient(fd, "Command not found!");
+		else if (res != 0)
+			std::cout << token << ": Error code: " << res << std::endl;
 		if(msg.empty())
 			return 1;
 		str = get_msg(fd);

@@ -27,6 +27,7 @@ int Server::join(int fd, std::string str)
 			pass = std::atoi(tokens[1].c_str());
 			channels.insert(std::pair<std::string, Channel>(tokens[0], Channel(tokens[0], pass, fd, clients[fd])));
 		}
+		it = channels.find(tokens[0]);
 	}
 	else if (it->second.channel_clients.size() + 1 <= it->second.getMax())
 	{
@@ -66,8 +67,16 @@ int Server::join(int fd, std::string str)
 	}
 	if (res == 0)
 	{
-		sendToClient(fd, JOIN(clients[fd].rplFirst(), tokens[0], clients[fd].getNick()));
+		it->second.channel_clients.insert(std::pair<int, Client>(fd, clients[fd]));
 		clients[fd].channelNames.push_back(tokens[0]);
+		std::map<int, Client>::iterator cha_cli = it->second.channel_clients.begin();
+		for (; cha_cli != it->second.channel_clients.end(); cha_cli++)
+		{
+			if (cha_cli->first == fd) // for the user that has just added
+				sendToClient(cha_cli->first, JOIN(clients[fd].rplFirst(), tokens[0], clients[fd].getNick()));
+			else // other members
+				sendToClient(cha_cli->first, JOIN(clients[fd].getNick(), tokens[0], std::string()));
+		}
 	}
 	tokens.clear();
 	return (res);

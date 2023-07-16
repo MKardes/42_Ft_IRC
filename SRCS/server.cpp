@@ -11,6 +11,7 @@ Server::Server(int argc, char **argv)
 	for(int i = 0; i < MAX_USER; i++)
 		firstPassCall[i] = 0;
 
+	commands["CAP"]  = &Server::cap;
 	commands["USER"]  = &Server::user;
 	commands["PASS"]  = &Server::pass;
 	commands["NICK"] = &Server::nick;
@@ -18,8 +19,11 @@ Server::Server(int argc, char **argv)
 	commands["QUIT"] = &Server::quit;
 	commands["KICK"]  = &Server::kick;
 	commands["PING"]  = &Server::ping;
-	commands["PONG"]  = &Server::pong;
+	//commands["PONG"]  = &Server::pong;
+	commands["NOTICE"]  = &Server::notice;
 	commands["PRIVMSG"]  = &Server::privmsg;
+	commands["TOPIC"]  = &Server::topic;
+	commands["BAN"]  = &Server::ban;
 }
 
 Server::~Server(){}
