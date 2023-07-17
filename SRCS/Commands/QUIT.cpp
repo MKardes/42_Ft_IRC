@@ -10,7 +10,7 @@ int Server::quit(int fd, std::string str)
 	{
 		if (it->fd == fd)
 		{
-			getOutChannels(fd, clients[fd]);
+			//getOutChannels(fd, clients[fd]);
 			sendToClient(fd, str);
 			passchc = 0;
 			firstPassCall[fd] = 0;

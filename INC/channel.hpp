@@ -10,7 +10,7 @@ typedef std::map<int, Client>::iterator				clientIterator;
 class Channel
 {
     private:
-        int         password; // -1 is not a password, it shows that the channel has no password
+        std::string password; // "" is not a password, it shows that the channel has no password
         std::string name;
         Client      &admin;
         int         maxUserCount;
@@ -20,16 +20,19 @@ class Channel
         std::map<int, Client>   invited;
         std::map<int, Client>   channel_clients;
 
-        Channel(std::string name, int pass, int fd, Client &admin);
+        Channel(std::string name, std::string pass, int fd, Client &admin);
 
-        void            setPassword(int pass);
-        void            setAdmin(Client &admin);
-        void            setName(std::string name);
-        void            setInvite(bool statu);
-        int             getMax();
-        int             getPassword();
-        std::string     getName();
-        bool            getInvite();
+        void                            setPassword(std::string pass);
+        void                            setAdmin(Client &admin);
+        void                            setName(std::string name);
+        void                            setInvite(bool statu);
+        void                            setnMode(bool statu);
+        void                            setMax(int);
+        int                             getMax();
+        std::string                     getPassword();
+        std::string                     getName();
+        bool                            getInvite();
+        bool                            getnMode();
         std::map<int, Client>::iterator getAdmin();
 
         int     addClient(int fd, Client &cli);

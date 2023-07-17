@@ -2,6 +2,7 @@
 
 // returns
 // -1 if the channel couldn't be found
+// -2 max size
 int Server::mode(int fd, std::string str)
 {
     std::vector<std::string>    tokens = split_by_n_r(str);
@@ -11,15 +12,37 @@ int Server::mode(int fd, std::string str)
         return (0);
     channel = tokens[0];
     mode = tokens[1];
-    if (mode == "+p")
+
+    channelIterator it = channels.find(channel);
+    if (it == channels.end())
     {
-        channelIterator it = channels.find(channel);
-        if (it == channels.end())
-        {
-            sendToClient(fd, "No such Channel!");
-            return (-1);
+        sendToClient(fd, "No such Channel!");
+        return (-1);
+    }
+
+	if (mode == "+p")
+	{
+		it->second.setInvite(true);
+	}
+	if (mode == "+n")
+	{
+		it->second.setnMode(true);
+	}
+	if (mode == "+k" )
+	{
+		it->second.setPassword(tokens[2]);
+    }
+	if(mode == "+l")
+	{
+        if(it->second.channel_clients.size() <= std::atoi(tokens[2].c_str()) )
+			{
+				it->second.setMax(std::atoi(tokens[2].c_str()));
         }
-        it->second.setInvite(true);
+		else
+		{
+			sendToClient(fd, "Wrong size!");
+			return (-2);
+		}
     }
     return (0);
 }

@@ -3,6 +3,7 @@
 // adam kanalda değilse kontrol +n
 
 // returns
+// -3 if channel couldn't take message from outside
 // -2 if channel couldn't be found
 // -1 if message found
 int Server::privmsg(int fd, std::string str)
@@ -29,7 +30,12 @@ int Server::privmsg(int fd, std::string str)
         std::map<std::string, Channel>::iterator cha = channels.find(channel);
         if (cha == channels.end())
             return (-2);
-        std::map<int, Client>::iterator cli = cha->second.channel_clients.begin();
+        
+        clientIterator  cli = cha->second.channel_clients.find(fd);
+        if (cha->second.getnMode() == true && cli == cha->second.channel_clients.end())
+            return(-3);
+
+        cli = cha->second.channel_clients.begin();
         for (; cli != cha->second.channel_clients.end(); cli++)
         {
             if (cli->first != fd)

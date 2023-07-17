@@ -1,15 +1,15 @@
 #include "channel.hpp"
 
-Channel::Channel(std::string _name, int _pass, int fd, Client &_admin): admin(_admin), password(_pass), name(_name)
+Channel::Channel(std::string _name, std::string _pass, int fd, Client &_admin): admin(_admin), password(_pass), name(_name)
 {
     maxUserCount = MAXUSER;
     inviteChannel = false;
-    nMode(false)
+    nMode = false;
     setAdmin(admin);
     addClient(fd, admin);
 }
 
-void Channel::setPassword(int pass)
+void Channel::setPassword(std::string pass)
 {
     password = pass;
 }
@@ -27,7 +27,23 @@ void Channel::setName(std::string _name)
 void Channel::setInvite(bool statu)
 {
     inviteChannel = statu;
-    std::cout << name << " is now Invite only Channel..." << std::endl;
+    std::cout << name << " is now Invite-Only Channel..." << std::endl;
+}
+
+void Channel::setnMode(bool statu)
+{
+    nMode = statu;
+    std::cout << name << " will not receive out-of-channel message..." << std::endl;
+}
+
+void Channel::setMax(int _maxUser)
+{
+    maxUserCount = _maxUser;
+}
+
+bool Channel::getnMode()
+{
+    return (nMode);
 }
 
 bool Channel::getInvite()
@@ -40,7 +56,7 @@ int Channel::getMax()
     return (maxUserCount);
 }
 
-int Channel::getPassword()
+std::string Channel::getPassword()
 {
     return (password);
 }
