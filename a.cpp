@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <map>
 
 class A
 {
@@ -23,7 +24,7 @@ class CLA
         }
 };
 
-int main()
+int main1()
 {
     A   x(12);
     A   y(13);
@@ -56,4 +57,28 @@ int main()
     obj.vect1.erase(it);
     for(std::vector<A>::iterator beg = obj.vect2.begin(); beg != obj.vect2.end(); beg++)
         std::cout << "-> " << beg->val<< std::endl;
+}
+
+int main()
+{
+    std::map<int, std::string> my_map;
+    std::map<int, std::string> my_map2;
+
+    my_map[3] = "Biri";
+    my_map[1] = "İkii";
+    my_map[2] = "UCCC";
+
+    my_map2.insert(std::pair<int, std::string>(3, "Iki"));
+    my_map2.insert(std::pair<int, std::string>(1, "Bir"));
+    my_map2.insert(std::pair<int, std::string>(2, "UC"));
+
+    //std::map<int, std::string>::iterator it = my_map.begin();
+    std::map<int, std::string>::iterator it = my_map2.begin();
+
+    std::cout << it->second << std::endl;
+    it++;
+    std::cout << it->second << std::endl;
+    it++;
+    std::cout << it->second << std::endl;
+    it++;
 }

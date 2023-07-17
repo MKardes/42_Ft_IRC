@@ -38,6 +38,7 @@ int Server::kick(int fd, std::string str)
                 {
                     // There is no one to be Admin
                     std::cout << "There is no member to be Admin in the channel.\n" << cha->second.getName() << " is deleting..." << std::endl;
+                    sendToClient(fd, KICK(clients[fd].rplFirst(), tokens[0], tokens[0], "Nothing"));
                     cha->second.channel_clients.clear();
                     cha->second.invited.clear();
 					channels.erase(cha);
@@ -72,13 +73,12 @@ int Server::kick(int fd, std::string str)
     {
         if (allClientsIT->second.getNick() == tokens[1])
         {
-            std::cout << "Test In \n";
             allClientsIT->second.channelNames.erase(std::find(allClientsIT->second.channelNames.begin(), allClientsIT->second.channelNames.end(), tokens[0]));
-            std::cout << "Test Out \n";
         }
     }
     if (tokens.size() == 3)
         reason = tokens[2]; // tek kelime
-    sendToClient(fd, KICK(clients[fd].rplFirst(), tokens[0], tokens[1], reason));
+    if(tokens[2] != "QUIT_USER")
+        sendToClient(fd, KICK(clients[fd].rplFirst(), tokens[0], tokens[1], reason));
     return (0);
 }

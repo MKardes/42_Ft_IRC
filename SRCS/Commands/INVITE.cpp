@@ -27,7 +27,6 @@ int Server::invite(int fd, std::string str)
     }
     for (; cli != clients.end(); cli++)
     {
-        std::cout << client << "  --  " << cli->second.getNick() << std::endl;
         if (cli->second.getNick() == client)
             break ;    
     }
