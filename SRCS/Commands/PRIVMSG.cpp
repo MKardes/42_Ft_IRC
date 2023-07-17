@@ -1,5 +1,7 @@
 #include "server.hpp"
 
+// adam kanalda değilse kontrol +n
+
 // returns
 // -2 if channel couldn't be found
 // -1 if message found

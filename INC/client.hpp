@@ -4,6 +4,8 @@
 # include <vector>
 # include <iostream>
 
+# include "messages.hpp"
+
 class   Client
 {
     private:

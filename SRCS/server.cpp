@@ -23,7 +23,8 @@ Server::Server(int argc, char **argv)
 	commands["NOTICE"]  = &Server::notice;
 	commands["PRIVMSG"]  = &Server::privmsg;
 	commands["TOPIC"]  = &Server::topic;
-	commands["BAN"]  = &Server::ban;
+	commands["MODE"]  = &Server::mode;
+	commands["INVITE"]  = &Server::invite;
 }
 
 Server::~Server(){}

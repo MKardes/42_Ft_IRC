@@ -1,7 +1,10 @@
 #include "channel.hpp"
 
-Channel::Channel(std::string _name, int _pass, int fd, Client &_admin): admin(_admin), password(_pass), name(_name), maxUserCount(MAXUSER)
+Channel::Channel(std::string _name, int _pass, int fd, Client &_admin): admin(_admin), password(_pass), name(_name)
 {
+    maxUserCount = MAXUSER;
+    inviteChannel = false;
+    nMode(false)
     setAdmin(admin);
     addClient(fd, admin);
 }
@@ -19,6 +22,17 @@ void Channel::setAdmin(Client &_admin)
 void Channel::setName(std::string _name)
 {
     name = _name;
+}
+
+void Channel::setInvite(bool statu)
+{
+    inviteChannel = statu;
+    std::cout << name << " is now Invite only Channel..." << std::endl;
+}
+
+bool Channel::getInvite()
+{
+    return (inviteChannel);
 }
 
 int Channel::getMax()
@@ -42,8 +56,18 @@ std::string Channel::getName()
 }
 
 // returns -1 if the client has already joined to that channel
+// returns -2 if the channel is full
+// returns -3 if the client is not invited
 int Channel::addClient(int fd, Client &cli)
 {
+    clientIterator clientIt = invited.find(fd);
+    if (getInvite() == true && clientIt == invited.end())
+    {
+        sendToClient(fd, "You are not invited to this Channel.");
+        return (-3);
+    }
+    if (getMax() < channel_clients.size() + 1)
+        return (-2);
     for(std::map<int, Client>::iterator it = channel_clients.begin(); it != channel_clients.end(); it++)
     {
         if (it->second.getNick() == cli.getNick())
@@ -52,6 +76,15 @@ int Channel::addClient(int fd, Client &cli)
         }
     }
     channel_clients[fd] = cli;
+	cli.channelNames.push_back(getName());
+    clientIterator cha_cli = channel_clients.begin();
+    for (; cha_cli != channel_clients.end(); cha_cli++)
+    {
+        if (cha_cli->first == fd) // for the user that has just added
+            sendToClient(cha_cli->first, JOIN(cli.rplFirst(), name, cli.getNick()));
+        else // other members
+            sendToClient(cha_cli->first, JOIN(cli.getNick(), name, std::string()));
+    }
     return (0);
 }
 

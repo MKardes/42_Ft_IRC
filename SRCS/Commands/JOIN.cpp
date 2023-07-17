@@ -1,6 +1,7 @@
 #include "server.hpp"
 
 // returns
+// -5 if the client is not invited
 // -4 if the channel is full
 // -3 if the channel has a password but the client did not type it
 // -2 if the password is incorrect,
@@ -29,7 +30,7 @@ int Server::join(int fd, std::string str)
 		}
 		it = channels.find(tokens[0]);
 	}
-	else if (it->second.channel_clients.size() + 1 <= it->second.getMax())
+	else
 	{
 		// there is a channel with this name
 		if (tokens.size() == 2)
@@ -40,10 +41,15 @@ int Server::join(int fd, std::string str)
 				sendToClient(fd, "Incorrect password for that channel.");
 				res = -2;
 			}
-			else if (it->second.addClient(fd, clients[fd]) < 0)
+			else if (it->second.addClient(fd, clients[fd]) == -1)
 			{
 				sendToClient(fd, "You have already joined to that channel!");
 				res = -1;
+			}
+			else if (it->second.addClient(fd, clients[fd]) == -2)
+			{
+				sendToClient(fd, "The channel is full");
+				res = -4;
 			}
 		}
 		else
@@ -58,26 +64,17 @@ int Server::join(int fd, std::string str)
 				sendToClient(fd, "You have already joined to that channel!");
 				res = -1;
 			}
+			else if (it->second.addClient(fd, clients[fd]) == -2)
+			{
+				sendToClient(fd, "The channel is full");
+				res = -4;
+			}
 		}
 	}
-	else
-	{
-		sendToClient(fd, "The channel is full");
-		res = -4;
-	}
-	if (res == 0)
-	{
-		it->second.channel_clients.insert(std::pair<int, Client>(fd, clients[fd]));
-		clients[fd].channelNames.push_back(tokens[0]);
-		std::map<int, Client>::iterator cha_cli = it->second.channel_clients.begin();
-		for (; cha_cli != it->second.channel_clients.end(); cha_cli++)
-		{
-			if (cha_cli->first == fd) // for the user that has just added
-				sendToClient(cha_cli->first, JOIN(clients[fd].rplFirst(), tokens[0], clients[fd].getNick()));
-			else // other members
-				sendToClient(cha_cli->first, JOIN(clients[fd].getNick(), tokens[0], std::string()));
-		}
-	}
+	// if (res == 0)
+	// {
+		
+	// }
 	tokens.clear();
 	return (res);
 }

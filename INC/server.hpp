@@ -17,17 +17,17 @@
 # include <map>
 # include "client.hpp"
 # include "channel.hpp"
-# include "messages.hpp"
-
-#include <arpa/inet.h>
+// # include "messages.hpp"
 
 # define BUFFER_SIZE 1024
 # define MAX_USER 100
 
-# define COMMANDS {"CAP", "PASS", "USER", "NICK", "PRIVMSG", "NOTICE", "PING", "JOIN", "KICK", "TOPIC", "BAN", "QUIT"}
-# define COMMANDCOUNT 12
-# define IGNORE (it->first == "CAP" || it->first == "PASS" || it->first == "USER")
+# define COMMANDS {"CAP", "PASS", "USER", "MODE", "NICK", "PRIVMSG", "NOTICE", "PING", "JOIN", "KICK", "TOPIC", "INVITE", "QUIT"}
+# define COMMANDCOUNT 13
+# define IGNORE (it->first == "CAP" || it->first == "PASS" || it->first == "USER" || it->first == "MODE")
 
+typedef std::map<std::string, Channel>::iterator	channelIterator;
+typedef std::map<int, Client>::iterator				clientIterator;
 /* 	A sockaddr_in is a structure containing an internet
 	address. This structure is defined in <netinet/in.h>.
 	Here is the definition:
@@ -104,10 +104,10 @@ class Server
 		int	privmsg(int fd, std::string);
 		int	notice(int fd, std::string);
 		int	ping(int fd, std::string);
-		//int	pong(int fd, std::string);
 		int	kick(int fd, std::string);
 		int	topic(int fd, std::string);
-		int	ban(int fd, std::string);
+		int	mode(int fd, std::string);
+		int	invite(int fd, std::string);
 
 		/* Getter and setter */
 		int			getPort();
