@@ -23,14 +23,13 @@ int Server::kick(int fd, std::string str)
         return (-2);
     }
 
-    if (tokens.size() == 3)
+    if (tokens.size() >= 3)
         reason = tokens[2]; // tek kelime,
     if(tokens[2] != "QUIT_USER")
     {
         clientIterator  it = cha->second.channel_clients.begin();
         for(; it != cha->second.channel_clients.end(); it++)
         {
-            std::cout << it->first << " " <<  KICK(clients[fd].rplFirst(), tokens[0], tokens[1], reason);
             sendToClient(it->first, KICK(clients[fd].rplFirst(), tokens[0], tokens[1], reason));
         }
     }
@@ -52,16 +51,20 @@ int Server::kick(int fd, std::string str)
                     cha->second.invited.clear();
 					channels.erase(cha);
                     chaDeleted++;
-                    std::cout << "Test\n";
                 }
                 else
                 {
                     // The new Admin;
                     std::cout << "Admin is changing..." << std::endl;
                     clientIterator  it = cha->second.channel_clients.begin();
-                    for(; it != cha->second.channel_clients.end(); it = cha->second.channel_clients.begin())
+                    for(; it != cha->second.channel_clients.end(); it++)
+                    {
                         if (it->second.getNick() == cha->second.getAdmin())
+                        {
                             cha->second.channel_clients.erase(it->first);
+                            break ;
+                        }
+                    }
                     cha->second.setAdmin(cha->second.channel_clients.begin()->second.getNick());
                     std::cout << "The new Admin is " << cha->second.getAdmin() << std::endl;
                 }
@@ -78,7 +81,10 @@ int Server::kick(int fd, std::string str)
         for (; invitedClients != cha->second.invited.end(); invitedClients++)
         {
             if (invitedClients->second.getNick() == tokens[1])
+            {
                 cha->second.invited.erase(invitedClients);
+                break ;
+            }
         }
     }
     

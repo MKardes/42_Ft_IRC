@@ -25,6 +25,14 @@ int Server::nick(int fd, std::string str)
 	else
 	{
 		sendToClient(fd, NICK(clients[fd].rplFirst(), str));
+		channelIterator	cha = channels.begin();
+		for (; cha != channels.end(); cha++)
+		{
+			if (cha->second.getAdmin() == clients[fd].getNick())
+			{
+				cha->second.setAdmin(str);
+			}
+		}
 		it->second.setNick(str);
 	}
 	return (0);

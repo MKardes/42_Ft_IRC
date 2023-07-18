@@ -3,6 +3,7 @@
 // returns
 // -1 if the channel couldn't be found
 // -2 max size
+// -3 it is not an admin
 int Server::mode(int fd, std::string str)
 {
     std::vector<std::string>    tokens = split_by_n_r(str);
@@ -18,6 +19,12 @@ int Server::mode(int fd, std::string str)
     {
         sendToClient(fd, "No such Channel!");
         return (-1);
+    }
+
+    if (it->second.getAdmin() != clients[fd].getNick())
+    {
+        sendToClient(fd, "Kick command requires Admin authority.");
+        return (-3);
     }
 
 	if (mode == "+p")
