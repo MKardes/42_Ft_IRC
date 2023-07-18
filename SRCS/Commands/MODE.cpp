@@ -41,7 +41,7 @@ int Server::mode(int fd, std::string str)
     }
 	if(mode == "+l")
 	{
-        if(it->second.channel_clients.size() <= std::atoi(tokens[2].c_str()) )
+        if((int)(it->second.channel_clients.size()) <= std::atoi(tokens[2].c_str()))
 			{
 				it->second.setMax(std::atoi(tokens[2].c_str()));
         }

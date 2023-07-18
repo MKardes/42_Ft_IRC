@@ -82,7 +82,7 @@ int Channel::addClient(int fd, Client &cli)
         sendToClient(fd, "You are not invited to this Channel.");
         return (-3);
     }
-    if (getMax() < channel_clients.size() + 1)
+    if (getMax() < (int)(channel_clients.size() + 1))
         return (-2);
     for(std::map<int, Client>::iterator it = channel_clients.begin(); it != channel_clients.end(); it++)
     {

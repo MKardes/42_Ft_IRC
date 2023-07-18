@@ -2,7 +2,7 @@
 
 std::string	Server::get_msg(int fd)
 {
-    int			i = 0, bytes_received;
+    int			bytes_received;
 	char		buff[BUFFER_SIZE];
 	std::string	res;
 	
@@ -43,8 +43,7 @@ std::string toUpper(const std::string& str)
 
 void	Server::parser(std::string str, std::string &token, std::string &args)
 {
-	int	res;
-	int	del_place = str.find(" ");
+	std::size_t	del_place = str.find(" ");
 	if (del_place != std::string::npos)
 	{
 		token = str.substr(0, del_place);
@@ -82,7 +81,7 @@ int    Server::handleMassage(int fd)
 		res = executeCommand(fd, token, args);
 		if (res == -11 && token != "WHO")
 			sendToClient(fd, "Command not found!");
-		else if (res != 0)
+		else if (res != 0 && token != "WHO")
 			std::cout << token << ": Error code: " << res << std::endl;
 		if(msg.empty())
 			return 1;

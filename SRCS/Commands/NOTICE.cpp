@@ -3,8 +3,7 @@
 // returns -1 if message found
 int Server::notice(int fd, std::string str)
 {
-    int	        res;
-	int	        del_place = str.find(" ");
+	std::size_t del_place = str.find(" ");
     std::string channel, msg;
 	if (del_place != std::string::npos)
 	{

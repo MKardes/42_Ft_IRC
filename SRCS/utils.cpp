@@ -5,47 +5,12 @@ void	Server::getOutChannels(int fd, Client &cli)
 	std::vector<std::string>::iterator it = cli.channelNames.begin();
 	for (; it != cli.channelNames.end(); it = cli.channelNames.begin())
 		kick(fd, *it + " " + cli.getNick() + " QUIT_USER");
-	// std::cout << "Get Out!!!\n";
-	// std::vector<std::string>::iterator it = cli.channelNames.begin();
-	// int		i = 0;
-	// for(std::vector<std::string>::iterator beg = cli.channelNames.begin(); beg != cli.channelNames.end(); beg++)
-	// {
-	// 	std::cout << i << " -- " << *beg << "\n";
-	// 	i++;
-	// }
-    // while (it != cli.channelNames.end())
-    // {
-    //     std::map<std::string, Channel>::iterator chIt = channels.find(*it);
-    //     if(chIt != channels.end())
-    //     {
-	// 		if (chIt->second.getAdmin() == cli.getNick())
-	// 		{
-	// 			if (chIt->second.adminDropped() < 0)
-	// 			{
-	// 				std::cout << "channel: " << chIt->first << " is removed!\n";
-	// 				chIt->second.channel_clients.clear();
-	// 				channels.erase(chIt);
-	// 			}
-	// 		}
-	// 		if (chIt->second.channel_clients.find(fd) != chIt->second.channel_clients.end())
-	// 			chIt->second.channel_clients.erase(fd);
-	// 		else
-	// 			std::cout << "Else\n";
-    //     }
-	// 	std::cout << *it << "E\n";
-	// 	if (it == cli.channelNames.end())
-	// 		std::cout << "YES\n";
-    //     it++;
-	// 	std::cout << "C\n";
-    // }
-	// cli.channelNames.clear();
 }
 
 std::string delr(std::string str)
 {
 	std::string::iterator	it = str.begin();
 	std::string				res;
-	int i = 0;
 	while(it != str.end())
 	{
 		if (*it != '\r')
@@ -71,18 +36,12 @@ std::vector<std::string>	split_by_n_r(std::string str)
 	return tokens;
 }
 
-int isFileDescriptorOpen(int fd)
-{
-    int flags = fcntl(fd, F_GETFL);
-    return (flags != -1);
-}
-
 // Adds the and of the message "\r\n" and then send's it to the fd
 // returns 1 if message send successfully, otherwise 0
 int	sendToClient(int fd, std::string msg)
 {
 	msg += "\r\n";
-	return (send(fd, msg.c_str(), msg.size(), 0) == msg.size() ? 1 : 0);
+	return (send(fd, msg.c_str(), msg.size(), 0) == (int)msg.size() ? 1 : 0);
 }
 
 void	printChannel(Channel &cha)

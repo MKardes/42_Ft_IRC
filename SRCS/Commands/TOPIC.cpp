@@ -3,7 +3,7 @@
 // returns -1 if the channel does not exist
 int Server::topic(int fd, std::string str)
 {
-    int	        del_place = str.find(" ");
+    std::size_t del_place = str.find(" ");
     std::string channel, topic;
 	if (del_place != std::string::npos)
 	{
