@@ -17,10 +17,22 @@ int Server::kick(int fd, std::string str)
         sendToClient(fd, "Channel not found!");
         return (-1);
     }
-    if (cha->second.getAdmin()->first != fd)
+    if (cha->second.getAdmin() != clients[fd].getNick())
     {
         sendToClient(fd, "Kick command requires Admin authority.");
         return (-2);
+    }
+
+    if (tokens.size() == 3)
+        reason = tokens[2]; // tek kelime,
+    if(tokens[2] != "QUIT_USER")
+    {
+        clientIterator  it = cha->second.channel_clients.begin();
+        for(; it != cha->second.channel_clients.end(); it++)
+        {
+            std::cout << it->first << " " <<  KICK(clients[fd].rplFirst(), tokens[0], tokens[1], reason);
+            sendToClient(it->first, KICK(clients[fd].rplFirst(), tokens[0], tokens[1], reason));
+        }
     }
 
     clientIterator  channelClients = cha->second.channel_clients.begin();
@@ -29,27 +41,29 @@ int Server::kick(int fd, std::string str)
         if (channelClients->second.getNick() == tokens[1])
         {
             // drop the client from channel
-            if (cha->second.getAdmin()->second.getNick() == tokens[1])
+            if (cha->second.getAdmin() == tokens[1])
             {
                 // if the client is the admin
-                clientIterator old = channelClients;
-                channelClients++;
-                if (channelClients == cha->second.channel_clients.end())
+                if (cha->second.channel_clients.size() == 1)
                 {
                     // There is no one to be Admin
                     std::cout << "There is no member to be Admin in the channel.\n" << cha->second.getName() << " is deleting..." << std::endl;
-                    sendToClient(fd, KICK(clients[fd].rplFirst(), tokens[0], tokens[0], "Nothing"));
                     cha->second.channel_clients.clear();
                     cha->second.invited.clear();
 					channels.erase(cha);
                     chaDeleted++;
+                    std::cout << "Test\n";
                 }
                 else
                 {
                     // The new Admin;
-                    std::cout << "Admin is changing...\nThe new Admin is " << channelClients->second.getNick() << std::endl;
-                    cha->second.setAdmin(channelClients->second);
-                    cha->second.channel_clients.erase(old);
+                    std::cout << "Admin is changing..." << std::endl;
+                    clientIterator  it = cha->second.channel_clients.begin();
+                    for(; it != cha->second.channel_clients.end(); it = cha->second.channel_clients.begin())
+                        if (it->second.getNick() == cha->second.getAdmin())
+                            cha->second.channel_clients.erase(it->first);
+                    cha->second.setAdmin(cha->second.channel_clients.begin()->second.getNick());
+                    std::cout << "The new Admin is " << cha->second.getAdmin() << std::endl;
                 }
             }
             else // if the client is not the admin
@@ -67,7 +81,7 @@ int Server::kick(int fd, std::string str)
                 cha->second.invited.erase(invitedClients);
         }
     }
-
+    
     clientIterator  allClientsIT = clients.begin();
     for (; allClientsIT != clients.end(); allClientsIT++)
     {
@@ -76,9 +90,6 @@ int Server::kick(int fd, std::string str)
             allClientsIT->second.channelNames.erase(std::find(allClientsIT->second.channelNames.begin(), allClientsIT->second.channelNames.end(), tokens[0]));
         }
     }
-    if (tokens.size() == 3)
-        reason = tokens[2]; // tek kelime
-    if(tokens[2] != "QUIT_USER")
-        sendToClient(fd, KICK(clients[fd].rplFirst(), tokens[0], tokens[1], reason));
+
     return (0);
 }

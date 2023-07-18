@@ -1,12 +1,12 @@
 #include "channel.hpp"
 
-Channel::Channel(std::string _name, std::string _pass, int fd, Client &_admin): admin(_admin), password(_pass), name(_name)
+Channel::Channel(std::string _name, std::string _pass, int fd, Client &_admin): password(_pass), name(_name)
 {
     maxUserCount = MAXUSER;
     inviteChannel = false;
     nMode = false;
-    setAdmin(admin);
-    addClient(fd, admin);
+    setAdmin(_admin.getNick());
+    addClient(fd, _admin);
 }
 
 void Channel::setPassword(std::string pass)
@@ -14,9 +14,9 @@ void Channel::setPassword(std::string pass)
     password = pass;
 }
 
-void Channel::setAdmin(Client &_admin)
+void Channel::setAdmin(std::string _admin)
 {
-    admin = _admin;
+    adminNick = _admin;
 }
 
 void Channel::setName(std::string _name)
@@ -61,9 +61,9 @@ std::string Channel::getPassword()
     return (password);
 }
 
-std::map<int, Client>::iterator Channel::getAdmin()
+std::string Channel::getAdmin()
 {
-    return (channel_clients.begin());    
+    return (adminNick);    
 }
 
 std::string Channel::getName()
@@ -118,9 +118,9 @@ int Channel::adminDropped()
     if (it == channel_clients.end())
         return (-1);
     else
-        setAdmin(it->second);
+        setAdmin(it->second.getNick());
     channel_clients.erase(channel_clients.begin());
 
-    std::cout << "New Admin is " << getAdmin()->second.getNick() << std::endl;
+    std::cout << "New Admin is " << getAdmin() << std::endl;
     return 0;
 }

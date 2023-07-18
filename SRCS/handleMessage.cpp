@@ -10,6 +10,11 @@ std::string	Server::get_msg(int fd)
 	{
 		memset(buff, 0, BUFFER_SIZE);
 		bytes_received = recv(fd, buff, BUFFER_SIZE, 0);
+		if (bytes_received == 0)
+		{
+			quit(fd, "Disconnected ()");
+			return "";
+		}
 		if (bytes_received < 0)
 		{
 			std::cerr << "Receive failed" << std::endl;
@@ -75,7 +80,7 @@ int    Server::handleMassage(int fd)
     	parser(str, token, args);
 		std::cout << "Token: (" << token << ") Args: (" << args << ")\n"; 
 		res = executeCommand(fd, token, args);
-		if (res == -11)
+		if (res == -11 && token != "WHO")
 			sendToClient(fd, "Command not found!");
 		else if (res != 0)
 			std::cout << token << ": Error code: " << res << std::endl;

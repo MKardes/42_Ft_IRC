@@ -3,42 +3,42 @@
 void	Server::getOutChannels(int fd, Client &cli)
 {
 	std::vector<std::string>::iterator it = cli.channelNames.begin();
-	for (; it != cli.channelNames.end(); it++)
+	for (; it != cli.channelNames.end(); it = cli.channelNames.begin())
 		kick(fd, *it + " " + cli.getNick() + " QUIT_USER");
 	// std::cout << "Get Out!!!\n";
-	//std::vector<std::string>::iterator it = cli.channelNames.begin();
-	//int		i = 0;
-	//for(std::vector<std::string>::iterator beg = cli.channelNames.begin(); beg != cli.channelNames.end(); beg++)
-	//{
-	//	std::cout << i << " -- " << *beg << "\n";
-	//	i++;
-	//}
-    //while (it != cli.channelNames.end())
-    //{
-    //    std::map<std::string, Channel>::iterator chIt = channels.find(*it);
-    //    if(chIt != channels.end())
-    //    {
-	//		if (chIt->second.getAdmin()->second.getNick() == cli.getNick())
-	//		{
-	//			if (chIt->second.adminDropped() < 0)
-	//			{
-	//				std::cout << "channel: " << chIt->first << " is removed!\n";
-	//				chIt->second.channel_clients.clear();
-	//				channels.erase(chIt);
-	//			}
-	//		}
-	//		if (chIt->second.channel_clients.find(fd) != chIt->second.channel_clients.end())
-	//			chIt->second.channel_clients.erase(fd);
-	//		else
-	//			std::cout << "Else\n";
-    //    }
-	//	std::cout << *it << "E\n";
-	//	if (it == cli.channelNames.end())
-	//		std::cout << "YES\n";
-    //    it++;
-	//	std::cout << "C\n";
-    //}
-	//cli.channelNames.clear();
+	// std::vector<std::string>::iterator it = cli.channelNames.begin();
+	// int		i = 0;
+	// for(std::vector<std::string>::iterator beg = cli.channelNames.begin(); beg != cli.channelNames.end(); beg++)
+	// {
+	// 	std::cout << i << " -- " << *beg << "\n";
+	// 	i++;
+	// }
+    // while (it != cli.channelNames.end())
+    // {
+    //     std::map<std::string, Channel>::iterator chIt = channels.find(*it);
+    //     if(chIt != channels.end())
+    //     {
+	// 		if (chIt->second.getAdmin() == cli.getNick())
+	// 		{
+	// 			if (chIt->second.adminDropped() < 0)
+	// 			{
+	// 				std::cout << "channel: " << chIt->first << " is removed!\n";
+	// 				chIt->second.channel_clients.clear();
+	// 				channels.erase(chIt);
+	// 			}
+	// 		}
+	// 		if (chIt->second.channel_clients.find(fd) != chIt->second.channel_clients.end())
+	// 			chIt->second.channel_clients.erase(fd);
+	// 		else
+	// 			std::cout << "Else\n";
+    //     }
+	// 	std::cout << *it << "E\n";
+	// 	if (it == cli.channelNames.end())
+	// 		std::cout << "YES\n";
+    //     it++;
+	// 	std::cout << "C\n";
+    // }
+	// cli.channelNames.clear();
 }
 
 std::string delr(std::string str)
@@ -89,7 +89,7 @@ void	printChannel(Channel &cha)
 {
 	std::cout << "New channel: " << cha.getName() << "\n";
     std::cout << "Password: " << cha.getPassword() << "\n";
-    std::cout << "Admin: " << cha.getAdmin()->second.getNick() << "\n\n";
+    std::cout << "Admin: " << cha.getAdmin() << "\n\n";
     std::map<int, Client>::iterator it = cha.channel_clients.begin();
     while (it != cha.channel_clients.end())
     {
